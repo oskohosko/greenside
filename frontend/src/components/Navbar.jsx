@@ -28,17 +28,17 @@ export default function Navbar() {
             >
               <Link
                 to="/profile"
-                className={`flex items-center bg-primary/30 rounded-3xl p-1 transition-all duration-100 ${hovered ? "w-48 justify-start pl-3" : "w-12 justify-center"
+                className={`flex items-center bg-primary/30 rounded-3xl p-1 transition-all duration-100 ease-in-out ${hovered ? "w-full justify-start pl-2 pr-4" : " justify-center"
                   }`}
               >
-                {/* User Icon - Stays Centered Initially, Moves Left on Hover */}
+                {/* Icon */}
                 <div className="flex items-center justify-center w-10 h-10">
                   <CircleUserRound className="size-9 text-primary" strokeWidth={1.6} />
                 </div>
 
-                {/* Username - Appears with Opacity and Expands */}
+                {/* Username */}
                 <span
-                  className={`text-lg font-medium overflow-hidden whitespace-nowrap transition-all duration-800 ${hovered ? "opacity-100 max-w-full ml-2" : "opacity-0 w-0 ml-0"
+                  className={`text-lg font-medium overflow-hidden whitespace-nowrap ${hovered ? "opacity-100 max-w-full ml-2" : "opacity-0 w-0 ml-0"
                     }`}
                 >
                   Oskar Hosken

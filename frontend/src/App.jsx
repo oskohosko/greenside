@@ -1,12 +1,27 @@
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
+import AnalysisPage from "./pages/AnalysisPage";
 import HomePage from "./pages/HomePage";
+import RoundsPage from "./pages/RoundsPage";
+
+import { Routes, Route, Navigate } from "react-router-dom"
 
 export default function App() {
   return (
-    <div data-theme={"light"}>
+    <div data-theme={"greensideTheme"} className="h-screen flex flex-col">
+      {/* Navbar at the top */}
       <Navbar />
-      <HomePage />
+      {/* Content div with the sidebar on the left */}
+      <div className="flex flex-1 top-16">
+        <Sidebar />
+        <main className="flex-1 ml-16 lg:ml-40 mt-16 overflow-auto p-3 transition-all duration-300">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/rounds" element={<RoundsPage />} />
+            <Route path="/analysis" element={<AnalysisPage />} />
+          </Routes>
+        </main>
+      </div>
     </div>
   )
 }

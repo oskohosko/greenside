@@ -8,7 +8,7 @@ export default function Navbar() {
 
   return (
     <header
-      className="bg-base-300 border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-11/80">
+      className="bg-base-200 fixed w-full top-0 z-40 backdrop-blur-lg border-b-2 border-base-300">
       <div className="px-4 h-16">
         <div className="flex items-center h-full w-full">
           <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
@@ -38,7 +38,7 @@ export default function Navbar() {
 
                 {/* Username */}
                 <span
-                  className={`text-lg font-medium overflow-hidden whitespace-nowrap ${hovered ? "opacity-100 max-w-full ml-2" : "opacity-0 w-0 ml-0"
+                  className={`text-lg font-medium overflow-hidden whitespace-nowrap ${hovered ? "max-w-full ml-2" : "w-0 ml-0"
                     }`}
                 >
                   Oskar Hosken

@@ -1,5 +1,6 @@
 import { Menu } from "lucide-react"
 import HoleScore from "../components/HoleScore"
+import HoleMap from "../components/HoleMap"
 
 export default function AnalysisPage() {
 
@@ -17,7 +18,7 @@ export default function AnalysisPage() {
   return (
     <div className="flex flex-col w-full">
       {/* Title section */}
-      <div className="w-full h-16 flex justify-between pr-4.5 items-center">
+      <div className="w-full h-16 flex justify-between pr-4.5 items-center border-b-2 border-dashed border-base-200">
         <h1 className="text-4xl font-bold pointer-events-none">
           Round Analysis
         </h1>
@@ -26,29 +27,31 @@ export default function AnalysisPage() {
         </div>
       </div>
       {/* Content underneath */}
-      <div className="card card-border overflow-hidden px-2 w-1/2">
-        <h1 className="text-xl font-bold pointer-events-none border-b border-dashed border-base-200">
+      <div className="card overflow-hidden sm:w-full md:w-3/4 lg:w-[700px] mt-2 transition-all duration-300">
+        <h1 className="text-xl font-bold pointer-events-none">
           Score
         </h1>
-        <div className="p-1">
-          <div className="card card-border w-full">
-            <div className="grid grid-cols-9">
-              {frontNine.map((_, idx) => (
-                <div key={idx}>
-                  <HoleScore index={idx}/>
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-9 border-t-2 border-base-200/80">
-              {backNine.map((_, idx) => (
-                <div key={idx}>
-                  <HoleScore index={idx} />
-                </div>
-              ))}
-            </div>
+        <div className="card card-border w-full ">
+          <div className="grid grid-cols-9 pb-1">
+            {frontNine.map((_, idx) => (
+              <div key={idx}>
+                <HoleScore index={idx} />
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-9 border-t-2 border-base-200/80 pb-1">
+            {backNine.map((_, idx) => (
+              <div key={idx}>
+                <HoleScore index={idx} />
+              </div>
+            ))}
           </div>
         </div>
       </div>
+      <div className="h-full w-full">
+        <HoleMap/>
+      </div>
+      
     </div>
   )
 }

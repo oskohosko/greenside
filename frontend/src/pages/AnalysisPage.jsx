@@ -27,7 +27,7 @@ export default function AnalysisPage() {
         </div>
       </div>
       {/* Content underneath */}
-      <div className="card overflow-hidden sm:w-full md:w-3/4 lg:w-[700px] mt-2 transition-all duration-300">
+      <div className="card overflow-hidden sm:w-full md:w-3/4 lg:w-[700px] mt-2 mb-2 transition-all duration-300">
         <h1 className="text-xl font-bold pointer-events-none">
           Score
         </h1>
@@ -48,10 +48,12 @@ export default function AnalysisPage() {
           </div>
         </div>
       </div>
+      {/* Hole by hole section with map of each hole */}
+      <h1 className="text-xl font-bold pointer-events-none mb-1">Hole by hole</h1>
       <div className="h-full w-full">
-        <HoleMap/>
+        <HoleMap />
       </div>
-      
+
     </div>
   )
 }

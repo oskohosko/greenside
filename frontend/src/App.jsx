@@ -8,7 +8,7 @@ import { Routes, Route, Navigate } from "react-router-dom"
 
 export default function App() {
   return (
-    <div data-theme={"greensideTheme"} className="h-screen flex flex-col">
+    <div className="flex flex-col">
       {/* Navbar at the top */}
       <Navbar />
       {/* Content div with the sidebar on the left */}

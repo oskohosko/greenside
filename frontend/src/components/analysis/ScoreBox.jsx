@@ -4,7 +4,7 @@ export default function HoleScore({ index }) {
     "num": "1",
     "par": 4,
     "distance": "300m",
-    "score": 2
+    "score": 4
   }
 
   const getBorderStyle = (score, par) => {
@@ -25,7 +25,7 @@ export default function HoleScore({ index }) {
   }
 
   return (
-    <div className="card rounded-none aspect-square p-1">
+    <div className="card rounded-none aspect-square p-1 pointer-events-none">
       <div className={`aspect-square flex flex-col items-center pr-1 ${(index === 17 || index === 8) ? "border-none" : "border-r border-dashed border-base-200"}`}>
         {/* Top-left hole number and par */}
         <div className="absolute top-1 left-1">

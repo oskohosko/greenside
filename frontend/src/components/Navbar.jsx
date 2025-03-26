@@ -8,7 +8,7 @@ export default function Navbar() {
 
   return (
     <header
-      className="bg-base-200 fixed w-full top-0 z-40 backdrop-blur-lg border-b-2 border-base-300">
+      className="bg-base-100 fixed w-full top-0 z-40 backdrop-blur-lg border-b-2 border-base-300">
       <div className="px-4 h-16">
         <div className="flex items-center h-full w-full">
           <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">

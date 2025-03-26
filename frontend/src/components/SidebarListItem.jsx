@@ -21,11 +21,11 @@ export default function SidebarListItem({ name }) {
           name === "settings" ? "/settings" :
           "/"
           }`}
-        className="w-full h-12 bg-base-200 p-3 flex items-center gap-3 hover:bg-base-300 transition-colors duration-300"
+        className="w-full h-12 bg-base-100 p-3 flex items-center gap-3 hover:bg-base-200 transition-colors duration-300"
       >
         {/* Icon */}
         <div className="relative mx-auto lg:mx-0 pt-2 pb-2">
-          <div className={`size-8 rounded-xl flex items-center justify-center transition-colors duration-300 ${hovered ? "bg-base-200" : "bg-base-300"}`}>
+          <div className={`size-8 rounded-xl flex items-center justify-center transition-colors duration-300 ${hovered ? "bg-base-100" : "bg-base-200"}`}>
             {name === "rounds" ? (
               <Goal size={24} className="text-base-600" />
             ) : name === "analysis" ? (

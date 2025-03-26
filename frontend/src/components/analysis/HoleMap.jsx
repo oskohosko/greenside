@@ -67,15 +67,15 @@ export default function HoleMap() {
   useEffect(() => {
     let cleanup = null
 
-    // Initialize map after MapKit is ready
+    // Initialising map after MapKit is ready
     const setupMap = async () => {
       try {
-        // Wait for MapKit to be initialized (shared across components)
+        // Waiting for MapKit to be initialized (shared across components)
         await initializeMapKit(mapKitToken)
 
-        // Only create the map if it doesn't exist yet
+        // Only creating the map if it doesn't exist yet
         if (!mapRef.current && mapDivRef.current) {
-          // Create the map instance
+          // Creating the map instance
           const map = new window.mapkit.Map(mapDivRef.current, {
             showsCompass: false,
             showsZoomControl: false,
@@ -84,7 +84,7 @@ export default function HoleMap() {
           })
           mapRef.current = map
 
-          // Calculate bearing (direction) from tee to green
+          // Calculating the bearing from tee to green for orientation
           const calculateBearing = () => {
             const startLat = teeCoordinates.latitude * Math.PI / 180
             const startLng = teeCoordinates.longitude * Math.PI / 180
@@ -96,54 +96,54 @@ export default function HoleMap() {
               Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng)
             let bearing = Math.atan2(y, x) * 180 / Math.PI
 
-            // Convert to 0-360 degrees
+            // Converting to degrees
             bearing = (bearing + 360) % 360
 
             return bearing
           }
 
-          // Get the bearing and rotate the map
+          // Getting the bearing and rotating the map
           const bearing = calculateBearing()
           map.rotation = -bearing
 
-          // Create a region that fits both tee and green
+          // Creating a region that fits both tee and green
           const midLat = (teeCoordinates.latitude + greenCoordinates.latitude) / 2
           const midLong = (teeCoordinates.longitude + greenCoordinates.longitude) / 2
 
-          // Create a span that's slightly larger than needed to provide some padding
+          // Creating a span that's slightly larger than needed to provide some padding
           const latDelta = Math.abs(teeCoordinates.latitude - greenCoordinates.latitude) * 0.7
           const longDelta = Math.abs(teeCoordinates.longitude - greenCoordinates.longitude) * 0.7
 
-          // Set the region to fit both points
+          // Setting the region to fit both points
           map.region = new window.mapkit.CoordinateRegion(
             new window.mapkit.Coordinate(midLat, midLong),
             new window.mapkit.CoordinateSpan(latDelta, longDelta)
           )
 
-          // Add window resize handler to maintain the proper view
+          // Adding window resize handler to maintain the proper view
           const handleResize = () => {
-            // Check if map still exists
+            // Checking if map still exists
             if (mapRef.current) {
-              // Create the region
+              // Creating the region
               const region = new window.mapkit.CoordinateRegion(
                 new window.mapkit.Coordinate(midLat, midLong),
                 new window.mapkit.CoordinateSpan(latDelta, longDelta)
               )
 
-              // Use regionThatFits on the map instance, not on the region
+              // Using regionThatFits on the map instance, not on the region
               const fittedRegion = mapRef.current.regionThatFits(
                 region,
                 new window.mapkit.Padding(padding)
               )
 
-              // Set the fitted region to the map
+              // Setting the fitted region to the map
               mapRef.current.region = fittedRegion
             }
           }
 
           window.addEventListener('resize', handleResize)
 
-          // Set cleanup function
+          // Setting cleanup function
           cleanup = () => {
             window.removeEventListener('resize', handleResize)
             if (mapRef.current) {

@@ -1,42 +1,22 @@
 import RoundCard from "./RoundCard";
 import firebaseManager from "../../lib/firebase"
+import { useRoundStore } from "../../store/useRoundStore";
 import { useEffect, useState } from "react"
 
 
 export default function RoundsList() {
 
-  const [rounds, setRounds] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { getRounds, rounds, isRoundsLoading, selectedRound, setSelectedRound } = useRoundStore()
 
   // Fetching rounds on component load
   useEffect(() => {
-    async function fetchRounds() {
-      try {
-        const roundData = await firebaseManager.getAllRounds()
-        setRounds(roundData)
-        setLoading(false)
-      } catch (error) {
-        setError(error.message)
-        setLoading(false)
-      }
-    }
+    getRounds()
+  }, [getRounds])
 
-    fetchRounds()
-  }, [])
-
-  if (loading) {
+  if (isRoundsLoading) {
     return (
       <div>
-        Loading Rounds...
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div>
-        Error: {error}
+        Loading...
       </div>
     )
   }
@@ -50,10 +30,13 @@ export default function RoundsList() {
     return time
   }
 
-  for (let i = 0; i < rounds.length; i++) {
-    console.log(rounds[i].title)
-    console.log(timeConverter(rounds[i].createdAt))
-    console.log(rounds[i].score)
+  function toggleSelectedRound(round) {
+    // If we already have a selected round, reset it.
+    if (selectedRound) {
+      setSelectedRound(null)
+    } else {
+      setSelectedRound(round)
+    }
   }
 
   return (
@@ -65,29 +48,18 @@ export default function RoundsList() {
         className="flex overflow-x-auto space-x-2 pb-4"
       >
         {rounds.map((round, index) => (
-          <div className="flex-shrink-0 scroll-snap-align-start" key={index}>
-            <RoundCard roundName={round.title} roundTime={timeConverter(round.createdAt)} roundScore={round.score}
-            />
-          </div>
+          <button
+            key={index}
+            onClick={() => toggleSelectedRound(round)}
+            className="hover:cursor-pointer"
+          >
+            <div className="flex-shrink-0 scroll-snap-align-start">
+              <RoundCard roundName={round.title} roundTime={timeConverter(round.createdAt)} roundScore={round.score}
+              />
+            </div>
+          </button>
+
         ))}
-        {/* <div className="flex-shrink-0 scroll-snap-align-start">
-          <RoundCard />
-        </div>
-        <div className="flex-shrink-0 scroll-snap-align-start">
-          <RoundCard />
-        </div>
-        <div className="flex-shrink-0 scroll-snap-align-start">
-          <RoundCard />
-        </div>
-        <div className="flex-shrink-0 scroll-snap-align-start">
-          <RoundCard />
-        </div>
-        <div className="flex-shrink-0 scroll-snap-align-start">
-          <RoundCard />
-        </div>
-        <div className="flex-shrink-0 scroll-snap-align-start">
-          <RoundCard />
-        </div> */}
       </div>
     </div>
   )

@@ -20,7 +20,7 @@ export default function ScoreBox({ index, score }) {
     } else if (score < par - 1) {
       return "rounded-3xl border-2 border-error outline-2 outline-error outline-offset-1"
     } else {
-      return "border-none pb-1"
+      return "border-2 border-base-100"
     }
   }
 

@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import RoundsPage from "./pages/RoundsPage";
 
 import { Routes, Route, Navigate } from "react-router-dom"
+import { Toaster } from "react-hot-toast"
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           </Routes>
         </main>
       </div>
+      <Toaster />
     </div>
   )
 }

@@ -121,36 +121,36 @@ export default function HoleMap() {
           )
 
           // Adding window resize handler to maintain the proper view
-          const handleResize = () => {
-            // Checking if map still exists
-            if (mapRef.current) {
-              // Creating the region
-              const region = new window.mapkit.CoordinateRegion(
-                new window.mapkit.Coordinate(midLat, midLong),
-                new window.mapkit.CoordinateSpan(latDelta, longDelta)
-              )
+          // const handleResize = () => {
+          //   // Checking if map still exists
+          //   if (mapRef.current) {
+          //     // Creating the region
+          //     const region = new window.mapkit.CoordinateRegion(
+          //       new window.mapkit.Coordinate(midLat, midLong),
+          //       new window.mapkit.CoordinateSpan(latDelta, longDelta)
+          //     )
 
-              // Using regionThatFits on the map instance, not on the region
-              const fittedRegion = mapRef.current.regionThatFits(
-                region,
-                new window.mapkit.Padding(padding)
-              )
+          //     // Using regionThatFits on the map instance, not on the region
+          //     const fittedRegion = mapRef.current.regionThatFits(
+          //       region,
+          //       new window.mapkit.Padding(padding)
+          //     )
 
-              // Setting the fitted region to the map
-              mapRef.current.region = fittedRegion
-            }
-          }
+          //     // Setting the fitted region to the map
+          //     mapRef.current.region = fittedRegion
+          //   }
+          // }
 
-          window.addEventListener('resize', handleResize)
+          // window.addEventListener('resize', handleResize)
 
           // Setting cleanup function
-          cleanup = () => {
-            window.removeEventListener('resize', handleResize)
-            if (mapRef.current) {
-              mapRef.current.destroy()
-              mapRef.current = null
-            }
-          }
+          // cleanup = () => {
+          //   window.removeEventListener('resize', handleResize)
+          //   if (mapRef.current) {
+          //     mapRef.current.destroy()
+          //     mapRef.current = null
+          //   }
+          // }
         }
       } catch (error) {
         console.error("Error initializing map:", error)

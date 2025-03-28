@@ -39,6 +39,11 @@
   --noise: 0;
 }
 
+@layer base {
+  button, [role="button"] {
+    cursor: pointer;
+  }
+}
 
 @layer utiliies {
   .bg-base-400 {

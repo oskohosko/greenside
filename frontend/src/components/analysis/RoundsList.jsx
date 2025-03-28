@@ -32,7 +32,7 @@ export default function RoundsList() {
 
   function toggleSelectedRound(round) {
     // If we already have a selected round, reset it.
-    if (selectedRound) {
+    if (selectedRound === round) {
       setSelectedRound(null)
     } else {
       setSelectedRound(round)
@@ -51,7 +51,7 @@ export default function RoundsList() {
           <button
             key={index}
             onClick={() => toggleSelectedRound(round)}
-            className="hover:cursor-pointer"
+            className="text-left"
           >
             <div className="flex-shrink-0 scroll-snap-align-start">
               <RoundCard roundName={round.title} roundTime={timeConverter(round.createdAt)} roundScore={round.score}

@@ -8,9 +8,9 @@ export default function ScoreBox({ index, score, par }) {
     } else if (holeScore === holePar + 1) {
       return "rounded-md outline-2 outline-info"
     } else if (holeScore === holePar - 1) {
-      return "rounded-3xl outline-2 outline-accent"
+      return "rounded-3xl outline-2 outline-error"
     } else if (holeScore < holePar - 1) {
-      return "rounded-3xl border-2 border-error outline-2 outline-error outline-offset-1"
+      return "rounded-3xl border-2 border-accent outline-2 outline-accent outline-offset-1"
     } else {
       return "border-2 border-base-100"
     }

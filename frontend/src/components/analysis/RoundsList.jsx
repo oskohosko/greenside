@@ -31,10 +31,7 @@ export default function RoundsList() {
   }
 
   function toggleSelectedRound(round) {
-    // If we already have a selected round, reset it.
-    if (selectedRound === round) {
-      setSelectedRound(null)
-    } else {
+    if (selectedRound !== round) {
       setSelectedRound(round)
     }
   }

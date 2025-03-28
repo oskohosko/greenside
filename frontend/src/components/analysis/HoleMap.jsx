@@ -77,10 +77,10 @@ export default function HoleMap({ teeLat, teeLng, greenLat, greenLng }) {
         // Remove all annotations and overlays
         mapRef.current.removeAnnotations(mapRef.current.annotations)
         mapRef.current.removeOverlays(mapRef.current.overlays)
-        
+
         // Destroy the map
         mapRef.current.destroy()
-        
+
         // Nullify references to help garbage collection
         mapRef.current = null
       } catch (error) {
@@ -113,7 +113,8 @@ export default function HoleMap({ teeLat, teeLng, greenLat, greenLng }) {
           showsCompass: mapkit.FeatureVisibility.Hidden,
           showsZoomControl: false,
           showsMapTypeControl: false,
-          showsScale: mapkit.FeatureVisibility.Hidden
+          showsScale: mapkit.FeatureVisibility.Hidden,
+          // mapType: mapkit.Map.MapTypes.Satellite
         })
         mapRef.current = map
 
@@ -135,18 +136,48 @@ export default function HoleMap({ teeLat, teeLng, greenLat, greenLng }) {
           return bearing
         }
 
+        function haversineDistance(coord1, coord2) {
+          const toRadians = (degrees) => degrees * (Math.PI / 180);
+
+          const R = 6371000;
+
+          const lat1 = toRadians(coord1.latitude);
+          const lon1 = toRadians(coord1.longitude);
+          const lat2 = toRadians(coord2.latitude);
+          const lon2 = toRadians(coord2.longitude);
+
+          const dLat = lat2 - lat1;
+          const dLon = lon2 - lon1;
+
+          const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1) * Math.cos(lat2) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+          return R * c;
+        }
+
+        function calculateDelta(coord1, coord2) {
+
+          const holeDist = haversineDistance(coord1, coord2);
+
+          const delta = Math.max(0.0007, Math.min(0.005, 0.0007 * holeDist / 90.0))
+
+          return delta;
+        }
+
         // Creating a region that fits both tee and green
         const midLat = (teeCoordinates.latitude + greenCoordinates.latitude) / 2
         const midLong = (teeCoordinates.longitude + greenCoordinates.longitude) / 2
 
         // Creating a span that's slightly larger than needed to provide some padding
-        const latDelta = Math.abs(teeCoordinates.latitude - greenCoordinates.latitude) * 1.5
-        const longDelta = Math.abs(teeCoordinates.longitude - greenCoordinates.longitude) * 1.5
+        const delta = calculateDelta(teeCoordinates, greenCoordinates);
 
         // Setting the region to fit both points
         map.region = new window.mapkit.CoordinateRegion(
           new window.mapkit.Coordinate(midLat, midLong),
-          new window.mapkit.CoordinateSpan(latDelta, longDelta)
+          new window.mapkit.CoordinateSpan(delta, delta)
         )
 
         // Getting the bearing and attempting to rotate the map

@@ -16,7 +16,7 @@ export default function HolesList() {
   }
 
   return (
-    <div className="sm:w-full md:w-3/4 lg:w-[700px] mt-2 mb-2 transition-all duration-300">
+    <div className="sm:w-full md:w-3/4 lg:w-full mt-2 mb-2 transition-all duration-300">
       <h1 className="text-xl font-bold pointer-events-none mb-1">Hole by hole</h1>
       <div className="flex overflow-x-auto space-x-2 pb-4">
         {courseHoles?.map(hole => (

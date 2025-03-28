@@ -27,11 +27,10 @@ export default function AnalysisPage() {
       </div>
       {/* Rounds Section */}
       <RoundsList />
-
       {/* Score section */}
       <ScoreTable />
       {/* Hole by hole section with map of each hole */}
-      {/* <HolesList /> */}
+      <HolesList />
     </div>
   )
 }

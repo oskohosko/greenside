@@ -1,18 +1,18 @@
 import { Menu } from "lucide-react"
 import ScoreBox from "../components/analysis/ScoreBox"
-import HoleDetail from "../components/analysis/HoleDetail"
 import RoundsList from "../components/analysis/RoundsList"
+import { useRoundStore } from "../store/useRoundStore"
+import HolesList from "../components/analysis/HolesList"
+import ScoreTable from "../components/analysis/ScoreTable"
 
 export default function AnalysisPage() {
 
-  const testRound = {
-    "holes": "18",
-    "scores": [5, 6, 3, 2, 5, 4, 3, 4, 4, 3, 3, 4, 5, 4, 4, 5, 6, 5],
-    "finalScore": "77"
-  }
+  const { selectedRound, isScoreLoading, roundHoles, courseHoles } = useRoundStore()
 
-  const frontNine = testRound.scores.slice(0, 9)
-  const backNine = testRound.scores.slice(9, 18)
+  const scores = roundHoles.map(hole => hole.score)
+
+  const frontNine = scores.slice(0, 9)
+  const backNine = scores.slice(9, 18)
 
   return (
     <div className="flex flex-col w-full h-full">
@@ -29,30 +29,9 @@ export default function AnalysisPage() {
       <RoundsList />
 
       {/* Score section */}
-      <div className="sm:w-full md:w-3/4 lg:w-[700px] mt-2 mb-2 transition-all duration-300">
-        <h1 className="text-xl font-bold pointer-events-none">
-          Score
-        </h1>
-        <div className="card card-border w-full bg-base-100 border-2 border-base-300">
-          <div className="grid grid-cols-9 pb-1">
-            {frontNine.map((_, idx) => (
-              <div key={idx}>
-                <ScoreBox index={idx} score={testRound.scores[idx]} />
-              </div>
-            ))}
-          </div>
-          <div className="grid grid-cols-9 border-t-2 border-base-300 pb-1">
-            {backNine.map((_, idx) => (
-              <div key={idx}>
-                <ScoreBox index={idx} score={testRound.scores[idx + 9]} />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <ScoreTable />
       {/* Hole by hole section with map of each hole */}
-      <h1 className="text-xl font-bold pointer-events-none mb-1">Hole by hole</h1>
-      <HoleDetail />
+      {/* <HolesList /> */}
     </div>
   )
 }

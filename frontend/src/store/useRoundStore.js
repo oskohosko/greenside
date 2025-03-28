@@ -1,5 +1,6 @@
 import { create } from "zustand"
 import { toast } from "react-hot-toast"
+import { axiosInstance } from "../lib/axios.js"
 import firebaseManager from "../lib/firebase"
 
 export const useRoundStore = create((set, get) => ({
@@ -35,32 +36,25 @@ export const useRoundStore = create((set, get) => ({
   setSelectedRound: async (selectedRound) => {
     // Updating our selected round
     set({ selectedRound })
-    console.log(selectedRound)
-    set({ isHolesLoading: true })
+    set({ isHolesLoading: true, isScoreLoading: true })
     // Loading the holes now
     try {
-      // Getting the hole location and par data from the round
-      const requestURL = import.meta.env.VITE_COURSE_REQUEST_URL + selectedRound.courseId + ".json"
-      // Saving data as the selectedCourse
-      fetch(requestURL).then(
-        response => response.json()
-      ).then(
-        data => {
-          set({ selectedCourse: data })
-          console.log(data)
-        }
-      )
-      // Now let's see if it worked
+      // Getting the selected course from our api
+      const response = await axiosInstance.get(`/course/${selectedRound.courseId}`)
+      // Setting our selected course
+      set({ selectedCourse: response.data, courseHoles: response.data.holes })
 
+      console.log(response.data.holes)
 
       // Getting the hole data for the round from the user
       const holeData = await firebaseManager.getHolesForRound(selectedRound.id)
-      set({ holes: holeData })
-      console.log(holeData)
+      // Sorting by hole number
+      holeData.sort((a, b) => a.holeNum - b.holeNum)
+      set({ roundHoles: holeData })
     } catch (error) {
       toast.error(`Error getting holes for round: ${selectedRound}: ${error}`)
     } finally {
-      set({ isHolesLoading: false })
+      set({ isHolesLoading: false, isScoreLoading: false })
     }
   }
 })

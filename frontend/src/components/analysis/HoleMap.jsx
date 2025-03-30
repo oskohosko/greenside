@@ -182,13 +182,13 @@ export default function HoleMap({ teeLat, teeLng, greenLat, greenLng }) {
 
         // Getting the bearing and attempting to rotate the map
         const bearing = calculateBearing()
-
+        map.rotation = -bearing
         // Trying to set rotation
-        try {
-          map.rotation = -bearing
-        } catch (rotationError) {
-          console.warn('Could not set map rotation:', rotationError)
-        }
+        // try {
+        //     map.rotation = -bearing
+        // } catch (rotationError) {
+        //   console.warn('Could not set map rotation:', rotationError)
+        // }
 
       } catch (error) {
         console.error("Error initializing map:", error)

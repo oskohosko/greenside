@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
+import { calculateBearing, calculateDelta } from "../../utils/geometry"
 
 // Global flag to track MapKit initialization
 let mapKitInitialized = false
@@ -53,47 +54,35 @@ const initializeMapKit = (token) => {
 }
 
 // This is our component
-export default function HoleMap({ teeLat, teeLng, greenLat, greenLng }) {
+export default function HoleMap({ hole }) {
   // Map references
   const mapRef = useRef(null)
   const mapDivRef = useRef(null)
 
   const mapKitToken = import.meta.env.VITE_MAPKIT_TOKEN
 
-  const teeCoordinates = {
-    latitude: teeLat,
-    longitude: teeLng
-  }
+  // Extracting relevant info from the hole
+  const teeLat = hole.tee_lat
+  const teeLng = hole.tee_lng
+  const greenLat = hole.green_lat
+  const greenLng = hole.green_lng
 
-  const greenCoordinates = {
-    latitude: greenLat,
-    longitude: greenLng
-  }
 
-  // Enhanced cleanup function
+  // Cleanup function
   const cleanupMap = useCallback(() => {
     if (mapRef.current) {
       try {
-        // Remove all annotations and overlays
+        // Removing all annotations and overlays
         mapRef.current.removeAnnotations(mapRef.current.annotations)
         mapRef.current.removeOverlays(mapRef.current.overlays)
 
-        // Destroy the map
+        // Destroying the map
         mapRef.current.destroy()
 
-        // Nullify references to help garbage collection
+        // Nullifying reference
         mapRef.current = null
       } catch (error) {
         console.warn('Error during map cleanup:', error)
-      }
-    }
-
-    // Additional cleanup for WebGL context
-    if (mapDivRef.current) {
-      const canvas = mapDivRef.current.querySelector('canvas')
-      if (canvas) {
-        canvas.width = 0
-        canvas.height = 0
       }
     }
   }, [])
@@ -118,61 +107,15 @@ export default function HoleMap({ teeLat, teeLng, greenLat, greenLng }) {
         })
         mapRef.current = map
 
-        // Calculating the bearing from tee to green for orientation
-        const calculateBearing = () => {
-          const startLat = teeCoordinates.latitude * Math.PI / 180
-          const startLng = teeCoordinates.longitude * Math.PI / 180
-          const destLat = greenCoordinates.latitude * Math.PI / 180
-          const destLng = greenCoordinates.longitude * Math.PI / 180
-
-          const y = Math.sin(destLng - startLng) * Math.cos(destLat)
-          const x = Math.cos(startLat) * Math.sin(destLat) -
-            Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng)
-          let bearing = Math.atan2(y, x) * 180 / Math.PI
-
-          // Converting to degrees
-          bearing = (bearing + 360) % 360
-
-          return bearing
-        }
-
-        function haversineDistance(coord1, coord2) {
-          const toRadians = (degrees) => degrees * (Math.PI / 180);
-
-          const R = 6371000;
-
-          const lat1 = toRadians(coord1.latitude);
-          const lon1 = toRadians(coord1.longitude);
-          const lat2 = toRadians(coord2.latitude);
-          const lon2 = toRadians(coord2.longitude);
-
-          const dLat = lat2 - lat1;
-          const dLon = lon2 - lon1;
-
-          const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1) * Math.cos(lat2) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-          return R * c;
-        }
-
-        function calculateDelta(coord1, coord2) {
-
-          const holeDist = haversineDistance(coord1, coord2);
-
-          const delta = Math.max(0.0007, Math.min(0.005, 0.0007 * holeDist / 90.0))
-
-          return delta;
-        }
-
         // Creating a region that fits both tee and green
-        const midLat = (teeCoordinates.latitude + greenCoordinates.latitude) / 2
-        const midLong = (teeCoordinates.longitude + greenCoordinates.longitude) / 2
+        const midLat = (teeLat + greenLat) / 2
+        const midLong = (teeLng + greenLng) / 2
 
         // Creating a span that's slightly larger than needed to provide some padding
-        const delta = calculateDelta(teeCoordinates, greenCoordinates);
+        const delta = calculateDelta(
+          { latitude: teeLat, longitude: teeLng },
+          { latitude: greenLat, longitude: greenLng }
+        );
 
         // Setting the region to fit both points
         map.region = new window.mapkit.CoordinateRegion(
@@ -181,14 +124,8 @@ export default function HoleMap({ teeLat, teeLng, greenLat, greenLng }) {
         )
 
         // Getting the bearing and attempting to rotate the map
-        const bearing = calculateBearing()
+        const bearing = calculateBearing(teeLat, teeLng, greenLat, greenLng)
         map.rotation = -bearing
-        // Trying to set rotation
-        // try {
-        //     map.rotation = -bearing
-        // } catch (rotationError) {
-        //   console.warn('Could not set map rotation:', rotationError)
-        // }
 
       } catch (error) {
         console.error("Error initializing map:", error)

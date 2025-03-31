@@ -1,4 +1,5 @@
 import { useRoundStore } from "../../store/useRoundStore"
+import LazyHoleMap from "./LazyHoleMap"
 import HoleMap from "./HoleMap"
 
 
@@ -24,7 +25,7 @@ export default function HolesList() {
             <p className="font-semibold text-lg">Hole {hole.num}</p>
             <p className="font-medium text-sm/2 pb-2">Par {hole.par}</p>
             <div className="h-[300px] w-[160px] rounded-lg overflow-hidden">
-              <HoleMap teeLat={hole.tee_lat} teeLng={hole.tee_lng} greenLat={hole.green_lat} greenLng={hole.green_lng} />
+              <LazyHoleMap teeLat={hole.tee_lat} teeLng={hole.tee_lng} greenLat={hole.green_lat} greenLng={hole.green_lng} />
             </div>
           </div>
         ))}

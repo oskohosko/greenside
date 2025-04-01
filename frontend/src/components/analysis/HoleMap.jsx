@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
-import { calculateBearing, calculateDelta } from "../../utils/geometry"
+import { haversineDistance, calculateBearing, calculateDelta } from "../../utils/geometry"
 import { useRoundStore } from '../../store/useRoundStore'
-import ScoreBoxSkeleton from '../skeletons/ScoreBoxSkeleton'
+
 
 // flag to track MapKit initialization
 let mapKitInitialized = false
@@ -72,6 +72,11 @@ export default function HoleMap({ hole }) {
   const teeLng = hole.tee_lng
   const greenLat = hole.green_lat
   const greenLng = hole.green_lng
+
+  const holeLength = haversineDistance(
+    { latitude: teeLat, longitude: teeLng },
+    { latitude: greenLat, longitude: greenLng }
+  )
 
 
   // Cleanup function
@@ -165,6 +170,7 @@ export default function HoleMap({ hole }) {
 
   // Factory function for annotations
   var annotationFactory = function (coordinate, options) {
+    // console.log(options.data)
     // What the annotation looks like
     var div = document.createElement("div")
     div.className = `
@@ -175,29 +181,14 @@ export default function HoleMap({ hole }) {
     // Creating the tooltip
     var tooltip = document.createElement("div");
     tooltip.className = `
-    card card-border border-2 rounded-xl w-[150px] h-[80px] bg-base-100 border-base-300 pointer-events-none
+    card card-border border-2 rounded-lg w-[45px] bg-base-100 border-base-300 pointer-events-none flex items-center justify-center
     absolute invisible transition-opacity duration-300 opacity-0
   `
-    tooltip.innerHTML = `
-    <div class="flex flex-row h-full">
-      <div class="h-full w-2/5 pt-2 pb-2">
-        <div class="flex flex-col justify-between border-r-2 border-base-400 border-dashed h-full pl-2">
-          <p class="font-bold text-xs text-neutral pt-1">Shot 3</p>
-          <div class="ml-2 mb-1 text-primary"><Info /></div>
-        </div>
-      </div>
-      <div class="flex flex-col w-3/5 p-1">
-        <div class="h-1/2 flex flex-col">
-          <p class="font-medium text-[10px]">To pin:</p>
-          <p class="font-bold text-lg/4 mr-0 ml-3">130m</p>
-        </div>
-        <div class="h-1/2 flex flex-col">
-          <p class="font-medium text-[10px]">Last shot:</p>
-          <p class="font-bold text-lg/4 mr-0 ml-3">250m</p>
-        </div>
-      </div>
-    </div>
-  `
+    var shotDistDiv = document.createElement("div")
+    shotDistDiv.className = `text-xs font-medium`
+    shotDistDiv.innerHTML = `${options.data.distanceToPin}m`
+
+    tooltip.appendChild(shotDistDiv)
     div.appendChild(tooltip)
 
     // Hover events
@@ -211,8 +202,15 @@ export default function HoleMap({ hole }) {
       tooltip.style.visibility = 'hidden'
     })
 
-    // tooltip.style.top = tooltipPosition.top
-    tooltip.style.bottom = "15px"
+    // Distance to pin from the annotation
+    const distToPin = options.data.distanceToPin
+
+    // Seeing if we have at least 50% left to the hole
+    const distRatio = distToPin / holeLength
+
+    // Top / bottom adjustments. Now just need to do left and right
+    tooltip.style.top = (distRatio < 0.5) ? "15px" : ""
+    tooltip.style.bottom = (distRatio > 0.5) ? "15px" : ""
     tooltip.style.transform = 'translateX(-50%)'
 
 
@@ -224,7 +222,7 @@ export default function HoleMap({ hole }) {
     // Going through each shot
     shots.get(hole.num).forEach(function (shot) {
       var coordinate = new mapkit.Coordinate(shot.userLat, shot.userLong)
-      var annotation = new mapkit.Annotation(coordinate, annotationFactory)
+      var annotation = new mapkit.Annotation(coordinate, annotationFactory, { data: shot })
       mapRef.current.addAnnotation(annotation)
     })
   }

@@ -26,7 +26,7 @@ export default function ScoreTable() {
           </div>
           <div className="grid grid-cols-9 border-t-2 border-base-300 pb-1">
             {Array.from({ length: 9 }).map((_, idx) => (
-              <ScoreBoxSkeleton key={idx} index={idx} />
+              <ScoreBoxSkeleton key={idx} index={idx + 9} />
             ))}
           </div>
         </div>
@@ -50,7 +50,7 @@ export default function ScoreTable() {
         <div className="grid grid-cols-9 border-t-2 border-base-300 pb-1">
           {backNine.map((_, idx) => (
             <div key={idx}>
-              <ScoreBox index={idx} score={scores[idx + 9]} par={courseHoles[idx + 9].par} />
+              <ScoreBox index={idx + 9} score={scores[idx + 9]} par={courseHoles[idx + 9].par} />
             </div>
           ))}
         </div>

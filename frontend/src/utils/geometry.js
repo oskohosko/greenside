@@ -1,6 +1,6 @@
 // File to keep my geometrical functions
 
-function haversineDistance(coord1, coord2) {
+export function haversineDistance(coord1, coord2) {
   const toRadians = (degrees) => degrees * (Math.PI / 180);
 
   const R = 6371000;

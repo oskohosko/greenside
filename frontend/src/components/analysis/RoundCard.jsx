@@ -13,12 +13,13 @@ export default function RoundCard({ roundName, roundTime, roundScore }) {
         <div className="h-full w-3/5 pt-2 pb-2">
           <div className="flex flex-col justify-between border-r-2 border-base-400 border-dashed h-full pl-2">
             <p className="font-medium text-sm">{roundName}</p>
+            {/* Time */}
             <p className="font-medium text-xs text-base-600">{roundTime}</p>
           </div>
         </div>
         {/* Score */}
         <p className="flex items-center justify-center font-bold text-4xl p-1 w-2/5">{roundScore}</p>
-        {/* Time */}
+
       </div>
     </div>
   )

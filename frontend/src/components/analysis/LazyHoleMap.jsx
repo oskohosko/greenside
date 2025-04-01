@@ -13,9 +13,8 @@ export default function LazyHoleMap(props) {
         setIsVisible(entry.isIntersecting)
       },
       {
-        // Want to preload if the HoleMap is near
         root: null,
-        rootMargin: "100px",
+        rootMargin: "0px",
         threshold: 0.1
       }
     )

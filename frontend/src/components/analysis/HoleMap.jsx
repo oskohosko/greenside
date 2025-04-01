@@ -54,9 +54,10 @@ const initializeMapKit = (token) => {
 
   return initializationPromise
 }
-
 // This is our component
 export default function HoleMap({ hole }) {
+
+  const [isMapLoading, setIsMapLoading] = useState(true)
 
   // Map references
   const mapRef = useRef(null)
@@ -75,11 +76,12 @@ export default function HoleMap({ hole }) {
 
   // Cleanup function
   const cleanupMap = useCallback(() => {
+    console.log(`Cleaning hole: ${hole.num}`)
     if (mapRef.current) {
       try {
         // Removing all annotations and overlays
-        mapRef.current.removeAnnotations(mapRef.current.annotations)
-        mapRef.current.removeOverlays(mapRef.current.overlays)
+        // mapRef.current.removeAnnotations(mapRef.current.annotations)
+        // mapRef.current.removeOverlays(mapRef.current.overlays)
 
         // Destroying the map
         mapRef.current.destroy()
@@ -99,6 +101,7 @@ export default function HoleMap({ hole }) {
     // Initialising map after MapKit is ready
     const setupMap = async () => {
       try {
+        setIsMapLoading(true)
         // Waiting for MapKit to be initialized (shared across components)
         await initializeMapKit(mapKitToken)
 
@@ -133,17 +136,22 @@ export default function HoleMap({ hole }) {
 
         // Getting the bearing and attempting to rotate the map
         const bearing = calculateBearing(teeLat, teeLng, greenLat, greenLng)
-        map.rotation = -bearing
+        try {
+          map.rotation = -bearing
+        } catch (error) {
+          console.error("Rotation error")
+        }
 
         // Now getting the shots for this hole if they haven't been generated already
         if (!shots.get(hole.num)) {
           console.log(`Getting shots for hole: ${hole.num}`)
-          getShotsForHole(roundHoles[hole.num - 1])
+          await getShotsForHole(roundHoles[hole.num - 1])
         }
-        console.log(shots)
 
       } catch (error) {
         console.error("Error initializing map:", error)
+      } finally {
+        setIsMapLoading(false)
       }
     }
 
@@ -155,7 +163,20 @@ export default function HoleMap({ hole }) {
     }
   }, [teeLat, teeLng, greenLat, greenLng, mapKitToken])
 
-
+  // Waiting until the map has loaded before adding annotations as they are a bit finicky
+  if (!isMapLoading) {
+    // Going through each shot
+    for (let shot of shots.get(hole.num)) {
+      // Adding a marker annotation for now
+      const annotation = new mapkit.MarkerAnnotation(
+        new mapkit.Coordinate(shot.userLat, shot.userLong),
+        {
+          animates: false,
+        }
+      )
+      mapRef.current.addAnnotation(annotation)
+    }
+  }
 
   return (
     <div

@@ -1,20 +1,4 @@
-import { useRoundStore } from "../../store/useRoundStore"
-import LazyHoleMap from "./LazyHoleMap"
-import HoleCardSkeleton from "../skeletons/HoleCardSkeleton"
-
-
-
-export default function HolesList() {
-
-  const { courseHoles, roundHoles, isHolesLoading } = useRoundStore()
-
-  // Presenting a skeleton if it is loading
-  if (isHolesLoading) {
-    return (
-      <HoleCardSkeleton courseHoles={courseHoles} />
-    )
-  }
-
+export default function HoleCardSkeleton({ courseHoles }) {
   return (
     <div className="w-full mt-2 mb-2 transition-all duration-300">
       <h1 className="text-xl font-bold pointer-events-none mb-1">Hole by hole</h1>
@@ -24,7 +8,7 @@ export default function HolesList() {
             <p className="font-semibold text-lg">Hole {hole.num}</p>
             <p className="font-medium text-sm/2 pb-2">Par {hole.par}</p>
             <div className="h-[300px] w-[160px] rounded-lg overflow-hidden">
-              <LazyHoleMap hole={hole} />
+              <div className="h-full w-full bg-gradient-to-b from-base-200 to-base-300" />
             </div>
           </div>
         ))}

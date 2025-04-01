@@ -103,6 +103,9 @@ export default function HoleMap({ hole }) {
           showsZoomControl: false,
           showsMapTypeControl: false,
           showsScale: mapkit.FeatureVisibility.Hidden,
+          // Disabling these features for the list
+          isScrollEnabled: false,
+          isZoomEnabled: false
           // mapType: mapkit.Map.MapTypes.Satellite
         })
         mapRef.current = map

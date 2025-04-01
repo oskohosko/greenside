@@ -2,11 +2,9 @@ import { useRoundStore } from "../../store/useRoundStore"
 import LazyHoleMap from "./LazyHoleMap"
 import HoleCardSkeleton from "../skeletons/HoleCardSkeleton"
 
-
-
 export default function HolesList() {
 
-  const { courseHoles, roundHoles, isHolesLoading } = useRoundStore()
+  const { courseHoles, isHolesLoading } = useRoundStore()
 
   // Presenting a skeleton if it is loading
   if (isHolesLoading) {

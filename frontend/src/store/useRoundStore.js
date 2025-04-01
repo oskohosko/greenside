@@ -9,6 +9,7 @@ export const useRoundStore = create((set, get) => ({
   // Holes with user score data included (firebase)
   roundHoles: [],
   scores: [],
+  shots: new Map(),
   // Our selected round will dictate holes and scores
   selectedRound: null,
   selectedCourse: null,
@@ -44,18 +45,37 @@ export const useRoundStore = create((set, get) => ({
       // Setting our selected course
       set({ selectedCourse: response.data, courseHoles: response.data.holes })
 
-      console.log(response.data.holes)
-
       // Getting the hole data for the round from the user
       const holeData = await firebaseManager.getHolesForRound(selectedRound.id)
       // Sorting by hole number
       holeData.sort((a, b) => a.holeNum - b.holeNum)
       set({ roundHoles: holeData })
+      // console.log(holeData)
+
     } catch (error) {
       toast.error(`Error getting holes for round: ${selectedRound}: ${error}`)
     } finally {
       set({ isHolesLoading: false, isScoreLoading: false })
     }
+  },
+  getShotsForHole: async (hole) => {
+    // Getting the selected round
+    const { selectedRound, shots } = get()
+    // Id for getting the shots, num for hashing
+    const holeId = hole.id
+    const holeNum = hole.holeNum
+
+    try {
+      const shotData = await firebaseManager.getShotsOnHole(selectedRound.id, holeId)
+      // Using a map so we don't generate shots for holes we already have data for.
+      set({ shots: shots.set(holeNum, shotData) })
+    } catch (error) {
+      toast.error(`Error getting shots for hole: ${holeNum}`)
+      console.error(error)
+    }
+  },
+  resetShots: () => {
+    set({ shots: new Map() })
   }
 })
 )

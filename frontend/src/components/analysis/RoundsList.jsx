@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 
 export default function RoundsList() {
 
-  const { getRounds, rounds, isRoundsLoading, selectedRound, setSelectedRound } = useRoundStore()
+  const { getRounds, rounds, isRoundsLoading, selectedRound, setSelectedRound, resetShots } = useRoundStore()
 
   // Fetching rounds on component load
   useEffect(() => {
@@ -33,6 +33,8 @@ export default function RoundsList() {
   function toggleSelectedRound(round) {
     if (selectedRound !== round) {
       setSelectedRound(round)
+      // resetting for now will optimise later
+      resetShots()
     }
   }
 

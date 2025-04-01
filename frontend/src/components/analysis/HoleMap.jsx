@@ -1,7 +1,9 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { calculateBearing, calculateDelta } from "../../utils/geometry"
 
-// Global flag to track MapKit initialization
+import { useRoundStore } from '../../store/useRoundStore'
+
+// flag to track MapKit initialization
 let mapKitInitialized = false
 let initializationPromise = null
 
@@ -55,11 +57,14 @@ const initializeMapKit = (token) => {
 
 // This is our component
 export default function HoleMap({ hole }) {
+
   // Map references
   const mapRef = useRef(null)
   const mapDivRef = useRef(null)
 
   const mapKitToken = import.meta.env.VITE_MAPKIT_TOKEN
+
+  const { selectedRound, roundHoles, shots, getShotsForHole } = useRoundStore()
 
   // Extracting relevant info from the hole
   const teeLat = hole.tee_lat
@@ -130,6 +135,13 @@ export default function HoleMap({ hole }) {
         const bearing = calculateBearing(teeLat, teeLng, greenLat, greenLng)
         map.rotation = -bearing
 
+        // Now getting the shots for this hole if they haven't been generated already
+        if (!shots.get(hole.num)) {
+          console.log(`Getting shots for hole: ${hole.num}`)
+          getShotsForHole(roundHoles[hole.num - 1])
+        }
+        console.log(shots)
+
       } catch (error) {
         console.error("Error initializing map:", error)
       }
@@ -142,6 +154,8 @@ export default function HoleMap({ hole }) {
       cleanupMap()
     }
   }, [teeLat, teeLng, greenLat, greenLng, mapKitToken])
+
+
 
   return (
     <div

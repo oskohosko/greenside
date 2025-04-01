@@ -93,14 +93,13 @@ class FirebaseManager {
     try {
       const shotsCollection = collection(db, "rounds", roundId, "holes", holeId, "shots")
       // Sorting the query by the time when the shot was hit
-      const shotsQuery = query(shotsCollection, orderBy("timestamp", "asc"))
-      const shotsSnapshot = await getDocs(shotsQuery)
+      // const shotsQuery = query(shotsCollection, orderBy("timestamp", "asc"))
+      const shotsSnapshot = await getDocs(shotsCollection)
 
-      return {
-        id: shotsSnapshot.id,
-        ...shotsSnapshot.data()
-      }
-
+      return shotsSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
     } catch (error) {
       console.error(`Error fetching shots for hole: ${holeId} in round: ${roundId}:`, error)
       throw error

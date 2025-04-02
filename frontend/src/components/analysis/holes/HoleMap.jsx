@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
-import { haversineDistance, calculateBearing, calculateDelta } from "../../utils/geometry"
-import { useRoundStore } from '../../store/useRoundStore'
+import { haversineDistance, calculateBearing, calculateDelta } from "../../../utils/geometry"
+import { useRoundStore } from '../../../store/useRoundStore'
 
 
 // flag to track MapKit initialization
@@ -176,14 +176,14 @@ export default function HoleMap({ hole }) {
     div.className = `
     size-3 bg-blue-400 rounded-full border-2 border-blue-500 hover:bg-blue-500 cursor-pointer transition-all duration-300
     relative
-  `
+    `
 
     // Creating the tooltip
     var tooltip = document.createElement("div");
     tooltip.className = `
     card card-border border-2 rounded-lg w-[45px] bg-base-100 border-base-300 pointer-events-none flex items-center justify-center
     absolute invisible transition-opacity duration-300 opacity-0
-  `
+    `
     var shotDistDiv = document.createElement("div")
     shotDistDiv.className = `text-xs font-medium`
     shotDistDiv.innerHTML = `${options.data.distanceToPin}m`

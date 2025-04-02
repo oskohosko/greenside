@@ -6,6 +6,7 @@ export default function LazyHoleMap(props) {
   const [isVisible, setIsVisible] = useState(false)
   const observerRef = useRef(null)
 
+  // On appear checking if the component is in the viewport.
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -14,7 +15,7 @@ export default function LazyHoleMap(props) {
       },
       {
         root: null,
-        rootMargin: "0px",
+        rootMargin: "0px",  // Don't want to preload (taxing)
         threshold: 0.1
       }
     )
@@ -23,6 +24,7 @@ export default function LazyHoleMap(props) {
       observer.observe(observerRef.current)
     }
 
+    // Cleanup
     return () => observer.disconnect()
   }, [])
 

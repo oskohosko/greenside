@@ -1,8 +1,7 @@
 import { Menu } from "lucide-react"
-import ScoreBox from "../components/analysis/ScoreBox"
 import RoundsList from "../components/analysis/RoundsList"
 import { useRoundStore } from "../store/useRoundStore"
-import HolesList from "../components/analysis/HolesList"
+import HolesList from "../components/analysis/holes/HolesList"
 import ScoreTable from "../components/analysis/ScoreTable"
 
 export default function AnalysisPage() {

@@ -19,7 +19,6 @@ export default function RoundCard({ roundName, roundTime, roundScore }) {
         </div>
         {/* Score */}
         <p className="flex items-center justify-center font-bold text-4xl p-1 w-2/5">{roundScore}</p>
-
       </div>
     </div>
   )

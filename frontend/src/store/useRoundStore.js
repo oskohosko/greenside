@@ -10,28 +10,40 @@ export const useRoundStore = create((set, get) => ({
   roundHoles: [],
   scores: [],
   shots: new Map(),
+  // Holes with location and par data (aws)
+  courseHoles: [],
   // Our selected round will dictate holes and scores
   selectedRound: null,
   selectedCourse: null,
-  // Holes with location and par data (aws)
-  courseHoles: [],
+  selectedHole: null,
   // Flags for loading skeletons
   isRoundsLoading: false,
   isScoreLoading: false,
   isHolesLoading: false,
 
   // Function to get the rounds from our Firebase
-  getRounds: async () => {
+  getAllRounds: async () => {
     // Setting our loading flag
     set({ isRoundsLoading: true })
     try {
       // Calling firebase manager and populating rounds list
-      const roundData = await firebaseManager.getAllRounds()
-      set({ rounds: roundData })
+      const roundsData = await firebaseManager.getAllRounds()
+      set({ rounds: roundsData })
     } catch (error) {
       toast.error("Error when getting rounds:", error)
     } finally {
       set({ isRoundsLoading: false })
+    }
+  },
+  getRound: async (roundId) => {
+    const { setSelectedRound } = get()
+    try {
+      // Getting round data from firebase
+      const roundData = await firebaseManager.getRoundById(roundId)
+      // And setting selected round with this one
+      await setSelectedRound(roundData)
+    } catch (error) {
+      toast.error(`Error getting round: ${roundId}: ${error}`)
     }
   },
   setSelectedRound: async (selectedRound) => {
@@ -76,6 +88,10 @@ export const useRoundStore = create((set, get) => ({
   },
   resetShots: () => {
     set({ shots: new Map() })
+  },
+  // Updates the user's selected hole
+  setSelectedHole: (hole) => {
+    set({ selectedHole: hole })
   }
 })
 )

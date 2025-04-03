@@ -6,7 +6,7 @@ import RoundsPage from "./pages/RoundsPage";
 
 import { Routes, Route, Navigate } from "react-router-dom"
 import { Toaster } from "react-hot-toast"
-import HoleByHolePage from "./pages/HoleByHolePage";
+import RoundDetailPage from "./pages/RoundDetailPage";
 
 export default function App() {
   return (
@@ -21,7 +21,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/rounds" element={<RoundsPage />} />
             <Route path="/analysis" element={<AnalysisPage />} />
-            <Route path="/hole" element={<HoleByHolePage />} />
+            <Route path="/round/:roundId/hole/:holeNum" element={<RoundDetailPage />} />
           </Routes>
         </main>
       </div>

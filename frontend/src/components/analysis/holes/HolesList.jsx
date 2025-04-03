@@ -1,11 +1,10 @@
 import { useRoundStore } from "../../../store/useRoundStore"
-import LazyHoleMap from "./LazyHoleMap"
 import HoleCardSkeleton from "../../skeletons/HoleCardSkeleton"
 import HoleCard from "./HoleCard"
 
 export default function HolesList() {
 
-  const { courseHoles, isHolesLoading } = useRoundStore()
+  const { courseHoles, isHolesLoading, setSelectedHole } = useRoundStore()
 
   // Presenting a skeleton if it is loading
   if (isHolesLoading) {
@@ -20,7 +19,7 @@ export default function HolesList() {
       <div className="flex overflow-x-auto space-x-2 pb-4">
         {/* Mapping every hole to their respective map including their shots */}
         {courseHoles?.map(hole => (
-          <HoleCard hole={hole} key={hole.num}/>
+          <HoleCard hole={hole} key={hole.num} />
         ))}
       </div>
     </div>

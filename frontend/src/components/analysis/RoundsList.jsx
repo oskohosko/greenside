@@ -1,17 +1,17 @@
 import RoundCard from "./RoundCard";
-import firebaseManager from "../../lib/firebase"
 import { useRoundStore } from "../../store/useRoundStore";
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { timeConverter } from "../../utils/time";
 
 
 export default function RoundsList() {
 
-  const { getRounds, rounds, isRoundsLoading, selectedRound, setSelectedRound, resetShots } = useRoundStore()
+  const { getAllRounds, rounds, isRoundsLoading, selectedRound, setSelectedRound, resetShots } = useRoundStore()
 
   // Fetching rounds on component load
   useEffect(() => {
-    getRounds()
-  }, [getRounds])
+    getAllRounds()
+  }, [getAllRounds])
 
   if (isRoundsLoading) {
     return (
@@ -19,15 +19,6 @@ export default function RoundsList() {
         Loading...
       </div>
     )
-  }
-
-  function timeConverter(timestamp) {
-    var a = new Date(timestamp * 1000)
-    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    var month = months[a.getMonth()]
-    var date = a.getDate()
-    var time = month + ' ' + date
-    return time
   }
 
   function toggleSelectedRound(round) {

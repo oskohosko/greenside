@@ -230,7 +230,7 @@ export default function HoleMap({ hole }) {
   return (
     <div
       ref={mapDivRef}
-      className="golf-map-container w-full h-full"
+      className="golf-map-container w-full h-full cursor-auto"
       id="golf-map-container"
     />
   )

@@ -17,8 +17,12 @@ export default function RoundDetailPage() {
 
   const [isLoading, setIsLoading] = useState(true)
 
+  // State to manage selected shot
+  const [selectedShotIndex, setSelectedShotIndex] = useState(null)
+
   // Getting relevant round info
   useEffect(() => {
+    setSelectedShotIndex(null)
 
     const updateRound = async () => {
       try {
@@ -156,7 +160,10 @@ export default function RoundDetailPage() {
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold mt-2 px-1">Hole {holeNum}</h1>
           {/* The hole card */}
-          <LargeHoleCard hole={selectedHole} />
+          <LargeHoleCard
+            hole={selectedHole}
+            selectedShotIndex={selectedShotIndex}
+            setSelectedShotIndex={setSelectedShotIndex} />
         </div>
         {/* Score section */}
         <div className="flex flex-col">
@@ -166,6 +173,8 @@ export default function RoundDetailPage() {
             hole={roundHoles[holeNum - 1]}
             par={selectedHole.par}
             shots={shotsForHole}
+            selectedShotIndex={selectedShotIndex}
+            setSelectedShotIndex={setSelectedShotIndex}
           />
         </div>
       </div>

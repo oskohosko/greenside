@@ -3,7 +3,7 @@ import { haversineDistance, getBorderStyle } from "../../utils/utils"
 import { Flag } from "lucide-react"
 import HoleMap from "../analysis/holes/HoleMap"
 
-export default function LargeHoleCard({ hole }) {
+export default function LargeHoleCard({ hole, selectedShotIndex, setSelectedShotIndex }) {
 
   const { roundHoles } = useRoundStore()
 
@@ -36,7 +36,11 @@ export default function LargeHoleCard({ hole }) {
       </div>
 
       <div className="h-[540px] w-[280px] rounded-lg overflow-hidden">
-        <HoleMap hole={hole} interactive={true} />
+        <HoleMap
+          hole={hole}
+          interactive={true}
+          selectedShotIndex={selectedShotIndex}
+          setSelectedShotIndex={setSelectedShotIndex} />
       </div>
     </div >
   )

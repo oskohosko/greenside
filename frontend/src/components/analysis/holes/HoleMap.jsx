@@ -55,13 +55,16 @@ const initializeMapKit = (token) => {
   return initializationPromise
 }
 // This is our component
-export default function HoleMap({ hole, interactive }) {
+export default function HoleMap({ hole, interactive, selectedShotIndex, setSelectedShotIndex }) {
 
   const [isMapLoading, setIsMapLoading] = useState(true)
 
   // Map references
   const mapRef = useRef(null)
   const mapDivRef = useRef(null)
+
+  // Annotation reference
+  const annotationRefs = useRef(new Map())
 
   const mapKitToken = import.meta.env.VITE_MAPKIT_TOKEN
 
@@ -92,6 +95,8 @@ export default function HoleMap({ hole, interactive }) {
 
         // Nullifying reference
         mapRef.current = null
+        annotationRefs.current.clear()
+
       } catch (error) {
         console.warn('Error during map cleanup:', error)
       }
@@ -167,6 +172,44 @@ export default function HoleMap({ hole, interactive }) {
     }
   }, [teeLat, teeLng, greenLat, greenLng, mapKitToken])
 
+  useEffect(() => {
+    if (isMapLoading || !mapRef.current) return
+
+    const map = mapRef.current
+    const holeShots = (shots.get(hole.num) || []).sort((a, b) => a.time - b.time)
+
+    // Clear existing annotations
+    map.removeAnnotations(map.annotations)
+
+    annotationRefs.current.clear()
+
+    holeShots.forEach((shot, index) => {
+      const coordinate = new mapkit.Coordinate(shot.userLat, shot.userLong)
+      const annotation = new mapkit.Annotation(
+        coordinate,
+        annotationFactory,
+        { data: { shot, index }, calloutEnabled: false }
+      )
+      map.addAnnotation(annotation)
+    })
+  }, [isMapLoading, shots])
+
+  useEffect(() => {
+    annotationRefs.current.forEach(({ div, tooltip }, index) => {
+      if (!div || !tooltip) return
+
+      const isSelected = index === selectedShotIndex
+
+      div.classList.toggle("bg-blue-500", isSelected)
+      div.classList.toggle("bg-blue-400", !isSelected)
+
+      tooltip.classList.toggle("opacity-100", isSelected)
+      tooltip.classList.toggle("visible", isSelected)
+      tooltip.classList.toggle("opacity-0", !isSelected)
+      tooltip.classList.toggle("invisible", !isSelected)
+    })
+  }, [selectedShotIndex])
+
 
   // Factory function for annotations
   var annotationFactory = function (coordinate, options) {
@@ -174,7 +217,7 @@ export default function HoleMap({ hole, interactive }) {
     // What the annotation looks like
     var div = document.createElement("div")
     div.className = `
-    bg-blue-400 rounded-full border-2 border-blue-500 hover:bg-blue-500 cursor-pointer transition-all duration-300 relative
+    rounded-full border-2 cursor-pointer transition-all duration-300 relative pointer-events-none
     `
     // If map is interactive (larger) we want bigger annotations
     if (interactive) {
@@ -191,24 +234,15 @@ export default function HoleMap({ hole, interactive }) {
     `
     var shotDistDiv = document.createElement("div")
     shotDistDiv.className = `text-xs font-medium pointer-events-none`
-    shotDistDiv.innerHTML = `${options.data.distanceToPin}m`
+    shotDistDiv.innerHTML = `${options.data.shot.distanceToPin}m`
 
     tooltip.appendChild(shotDistDiv)
     div.appendChild(tooltip)
 
-    // Hover events
-    div.addEventListener("mouseenter", function () {
-      tooltip.style.opacity = 1
-      tooltip.style.visibility = 'visible'
-    })
-
-    div.addEventListener("mouseleave", function () {
-      tooltip.style.opacity = 0
-      tooltip.style.visibility = 'hidden'
-    })
+    div.classList.add("bg-blue-400", "border-blue-500", "hover:bg-blue-500")
 
     // Distance to pin from the annotation
-    const distToPin = options.data.distanceToPin
+    const distToPin = options.data.shot.distanceToPin
 
     // Seeing if we have at least 50% left to the hole
     const distRatio = distToPin / holeLength
@@ -220,18 +254,9 @@ export default function HoleMap({ hole, interactive }) {
     tooltip.style.bottom = (distRatio > 0.5) ? depth : ""
     tooltip.style.transform = 'translateX(-50%)'
 
+    annotationRefs.current.set(options.data.index, { div, tooltip })
 
     return div
-  }
-
-  // Waiting until the map has loaded before adding annotations as they are a bit finicky
-  if (!isMapLoading) {
-    // Going through each shot
-    (shots.get(hole.num) || []).forEach(function (shot) {
-      var coordinate = new mapkit.Coordinate(shot.userLat, shot.userLong)
-      var annotation = new mapkit.Annotation(coordinate, annotationFactory, { data: shot })
-      mapRef.current.addAnnotation(annotation)
-    })
   }
 
   return (

@@ -3,7 +3,7 @@ import { useRoundStore } from "../../store/useRoundStore"
 import { ArrowRight, Flag, FlagTriangleRight } from "lucide-react"
 import { haversineDistance } from "../../utils/utils"
 
-export default function ShotsCard({ hole, par, shots }) {
+export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSelectedShotIndex }) {
   const sortedShots = [...shots].sort((a, b) => a.time - b.time)
 
   return (
@@ -62,7 +62,7 @@ export default function ShotsCard({ hole, par, shots }) {
         } else {
           // Pick up
           if ((index + 1) < par && (index + 1) !== hole.score) {
-            flairs.push({ label: '📦 Packed it in', className: 'bg-[#D4BFA5] text-black'})
+            flairs.push({ label: '📦 Packed it in', className: 'bg-[#D4BFA5] text-black' })
           }
           // Hole out / Big putt
           else if (shot.distanceToPin > 10) {
@@ -71,9 +71,21 @@ export default function ShotsCard({ hole, par, shots }) {
         }
 
         return (
-          <div key={index} className="mb-4">
+          <div
+            key={index}
+            className="mb-2"
+          >
             <h1 className="text-xl font-bold">Shot {index + 1}</h1>
-            <div className="card card-border border-3 border-base-400 bg-base-200 mb-2 p-2 rounded-xl">
+            <div
+              className={`card card-border border-3 bg-base-200 mb-2 p-2 rounded-xl
+              ${index === selectedShotIndex ? "border-base-content" : "border-base-400"}
+              transition-all duration-200 cursor-pointer
+              `}
+              onClick={() => setSelectedShotIndex(
+                index === selectedShotIndex ? null : index
+              )
+              }
+            >
               <div className="flex flex-col gap-2">
                 <div className="flex flex-wrap gap-2">
                   <span className="text-sm px-2 py-1 rounded-full bg-accent">{shotType}</span>

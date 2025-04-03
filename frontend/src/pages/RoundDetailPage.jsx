@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { timeConverter, haversineDistance, getBorderStyle } from "../utils/utils"
 import HoleMap from "../components/analysis/holes/HoleMap"
-import LazyHoleMap from "../components/analysis/holes/LazyHoleMap"
+import LargeHoleCard from "../components/roundDetail/LargeHoleCard"
+import ShotsCard from "../components/roundDetail/ShotsCard"
 
 export default function RoundDetailPage() {
 
@@ -12,12 +13,13 @@ export default function RoundDetailPage() {
   const { roundId, holeNum } = useParams()
 
   // And info from our store
-  const { selectedRound, selectedCourse, selectedHole, roundHoles, courseHoles, setSelectedHole, getRound } = useRoundStore()
+  const { selectedRound, selectedCourse, selectedHole, roundHoles, courseHoles, setSelectedHole, getRound, isRoundsLoading } = useRoundStore()
 
   const [isLoading, setIsLoading] = useState(true)
 
   // Getting relevant round info
   useEffect(() => {
+    console.log(isRoundsLoading)
 
     const updateRound = async () => {
       try {
@@ -37,14 +39,12 @@ export default function RoundDetailPage() {
     }
 
     updateRound()
+
   }, [roundId, holeNum])
 
 
-  // This is the data from the user on the hole.
-  const playedHole = roundHoles[holeNum - 1]
-
   // Update this to be a skeleton
-  if (isLoading || !selectedRound || !selectedCourse || !selectedHole) {
+  if (isLoading || isRoundsLoading) {
     return (
       <div>
         Loading...
@@ -64,7 +64,7 @@ export default function RoundDetailPage() {
         </div>
       </div>
       {/* Card displaying round info */}
-      <div className="card card-border border-2 rounded-xl w-[400px] h-[110px] bg-base-100 border-base-300 mt-2">
+      <div className="card card-border border-3 rounded-xl w-[400px] h-[110px] bg-base-100 border-base-300 mt-2">
         <div className="flex flex-row h-full">
           {/* Title */}
           <div className="h-full w-5/7 pb-2">
@@ -83,34 +83,18 @@ export default function RoundDetailPage() {
           <h1 className="flex items-center justify-center font-bold text-4xl p-1 w-2/7">{selectedRound.score}</h1>
         </div>
       </div>
-      {/* Hole section */}
-      <h1 className="text-3xl font-bold mt-2 px-1">Hole {holeNum}</h1>
-
-      <div className="card card-border rounded-2xl border-2 border-base-300 pt-1 px-2 pb-2 w-[300px] bg-base-100">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="font-semibold text-2xl px-1">Par {selectedHole.par}</p>
-            <div className="flex flex-row items-center px-1 gap-2 pb-1">
-              <div className="size-6 flex items-center justify-center bg-error/40 rounded-lg">
-                <LandPlot className="size-5 text-error" />
-              </div>
-              <p className="font-bold text-xl">
-                {Math.round(haversineDistance(
-                  { latitude: selectedHole.tee_lat, longitude: selectedHole.tee_lng },
-                  { latitude: selectedHole.green_lat, longitude: selectedHole.green_lng }
-                ))}m
-              </p>
-            </div>
-          </div>
-          <div className={`flex justify-center items-center aspect-square w-[40px] mr-1 ${getBorderStyle(playedHole.score, selectedHole.par)} ${playedHole.score !== selectedHole.par ? "outline-3" : ""}`} >
-            <h2 className="text-4xl font-medium">
-              {playedHole.score}
-            </h2>
-          </div>
+      <div className="flex flex-row gap-10">
+        {/* Hole section */}
+        <div className="flex flex-col">
+          <h1 className="text-3xl font-bold mt-2 px-1">Hole {holeNum}</h1>
+          {/* The hole card */}
+          <LargeHoleCard hole={selectedHole} />
         </div>
-
-        <div className="h-[540px] w-[280px] rounded-lg overflow-hidden">
-          <HoleMap hole={selectedHole} interactive={true} />
+        {/* Score section */}
+        <div className="flex flex-col">
+          <h1 className="text-3xl font-bold mt-2 px-1">Shots</h1>
+          {/* Sending the user's shots */}
+          <ShotsCard hole={roundHoles[holeNum - 1]} />
         </div>
       </div>
     </div>

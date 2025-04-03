@@ -20,6 +20,7 @@ export const useRoundStore = create((set, get) => ({
   isRoundsLoading: false,
   isScoreLoading: false,
   isHolesLoading: false,
+  isShotsLoading: false,
 
   // Function to get the rounds from our Firebase
   getAllRounds: async () => {
@@ -71,6 +72,7 @@ export const useRoundStore = create((set, get) => ({
     }
   },
   getShotsForHole: async (hole) => {
+    set({ isShotsLoading: true })
     // Getting the selected round
     const { selectedRound, shots } = get()
     // Id for getting the shots, num for hashing
@@ -84,6 +86,8 @@ export const useRoundStore = create((set, get) => ({
     } catch (error) {
       toast.error(`Error getting shots for hole: ${holeNum}`)
       console.error(error)
+    } finally {
+      set({ isShotsLoading: false })
     }
   },
   resetShots: () => {

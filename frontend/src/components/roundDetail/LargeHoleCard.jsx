@@ -1,0 +1,41 @@
+import { useRoundStore } from "../../store/useRoundStore"
+import { haversineDistance, getBorderStyle } from "../../utils/utils"
+import { Flag } from "lucide-react"
+import HoleMap from "../analysis/holes/HoleMap"
+
+export default function LargeHoleCard({ hole }) {
+
+  const { roundHoles } = useRoundStore()
+
+  const playedHole = roundHoles[hole.num - 1]
+
+  return (
+    <div className="card card-border rounded-2xl border-3 border-base-300 pt-1 px-2 pb-2 w-[300px] bg-base-100" >
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="font-semibold text-2xl px-1">Par {hole.par}</p>
+          <div className="flex flex-row items-center px-1 gap-2 pb-1">
+            <div className="size-6 flex items-center justify-center bg-error/40 rounded-xl">
+              <Flag strokeWidth={3} className="size-4 text-error" />
+            </div>
+            <p className="font-bold text-xl">
+              {Math.round(haversineDistance(
+                { latitude: hole.tee_lat, longitude: hole.tee_lng },
+                { latitude: hole.green_lat, longitude: hole.green_lng }
+              ))}m
+            </p>
+          </div>
+        </div>
+        <div className={`flex justify-center items-center aspect-square w-[40px] mr-1 ${getBorderStyle(playedHole.score, hole.par)} ${playedHole.score !== hole.par ? "outline-3" : ""}`} >
+          <h2 className="text-4xl font-medium">
+            {playedHole.score}
+          </h2>
+        </div>
+      </div>
+
+      <div className="h-[540px] w-[280px] rounded-lg overflow-hidden">
+        <HoleMap hole={hole} interactive={true} />
+      </div>
+    </div >
+  )
+}

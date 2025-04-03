@@ -42,7 +42,7 @@ export default function HoleCard({ hole }) {
 
   return (
     <div
-      className="card card-border rounded-2xl border-2 border-base-300 pt-1 px-2 pb-2 w-[180px] bg-base-100 cursor-pointer"
+      className="card card-border rounded-2xl border-2 border-base-300 pt-1 px-2 pb-2 w-[180px] bg-base-100 cursor-pointer hover:border-base-content/20 hover:shadow-xl"
       onClick={() => handleClick(hole)}
       >
       <p className="font-semibold text-lg">Hole {hole.num}</p>

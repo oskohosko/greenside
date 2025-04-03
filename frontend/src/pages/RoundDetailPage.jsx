@@ -83,7 +83,7 @@ export default function RoundDetailPage() {
           <h1 className="flex items-center justify-center font-bold text-4xl p-1 w-2/7">{selectedRound.score}</h1>
         </div>
       </div>
-      <div className="flex flex-row gap-10">
+      <div className="flex flex-row gap-10 mt-2">
         {/* Hole section */}
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold mt-2 px-1">Hole {holeNum}</h1>
@@ -94,7 +94,7 @@ export default function RoundDetailPage() {
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold mt-2 px-1">Shots</h1>
           {/* Sending the user's shots */}
-          <ShotsCard hole={roundHoles[holeNum - 1]} />
+          <ShotsCard hole={roundHoles[holeNum - 1]} par={selectedHole.par} />
         </div>
       </div>
     </div>

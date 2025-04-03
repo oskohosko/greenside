@@ -26,7 +26,9 @@ export default function LargeHoleCard({ hole }) {
             </p>
           </div>
         </div>
-        <div className={`flex justify-center items-center aspect-square w-[40px] mr-1 ${getBorderStyle(playedHole.score, hole.par)} ${playedHole.score !== hole.par ? "outline-3" : ""}`} >
+        <div className={`flex justify-center items-center aspect-square w-[40px] mr-1 
+          ${getBorderStyle(playedHole.score, hole.par)}
+          ${(playedHole.score !== hole.par + 2 && playedHole.score !== hole.par) ? "outline-3" : ""}`} >
           <h2 className="text-4xl font-medium">
             {playedHole.score}
           </h2>

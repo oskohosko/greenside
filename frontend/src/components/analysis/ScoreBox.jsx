@@ -1,20 +1,6 @@
-export default function ScoreBox({ index, score, par }) {
+import { getBorderStyle } from "../../utils/utils"
 
-  const getBorderStyle = (holeScore, holePar) => {
-    // Without using enums I see no better way to do this
-    // Double bogey or worse:
-    if (holeScore > holePar + 1) {
-      return "rounded-md border-2 border-info outline-2 outline-info outline-offset-1"
-    } else if (holeScore === holePar + 1) {
-      return "rounded-md outline-2 outline-info"
-    } else if (holeScore === holePar - 1) {
-      return "rounded-3xl outline-2 outline-error"
-    } else if (holeScore < holePar - 1) {
-      return "rounded-3xl border-2 border-accent outline-2 outline-accent outline-offset-1"
-    } else {
-      return "border-2 border-base-100"
-    }
-  }
+export default function ScoreBox({ index, score, par }) {
 
   return (
     <div className="card rounded-none aspect-square p-1 pointer-events-none">

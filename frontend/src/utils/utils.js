@@ -52,3 +52,28 @@ export function calculateBearing(teeLat, teeLng, greenLat, greenLng) {
 
   return bearing
 }
+
+export function timeConverter(timestamp) {
+  var a = new Date(timestamp * 1000)
+  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  var month = months[a.getMonth()]
+  var date = a.getDate()
+  var time = month + ' ' + date
+  return time
+}
+
+export function getBorderStyle(holeScore, holePar) {
+  // Without using enums I see no better way to do this
+  // Double bogey or worse:
+  if (holeScore > holePar + 1) {
+    return "rounded-md border-2 border-info outline-2 outline-info outline-offset-1"
+  } else if (holeScore === holePar + 1) {
+    return "rounded-md outline-2 outline-info"
+  } else if (holeScore === holePar - 1) {
+    return "rounded-full outline-2 outline-error"
+  } else if (holeScore < holePar - 1) {
+    return "rounded-full border-2 border-accent outline-2 outline-accent outline-offset-1"
+  } else {
+    return "border-2 border-base-100"
+  }
+}

@@ -1,7 +1,7 @@
 import RoundCard from "./RoundCard";
 import { useRoundStore } from "../../store/useRoundStore";
 import { useEffect } from "react"
-import { timeConverter } from "../../utils/time";
+import { timeConverter } from "../../utils/utils";
 
 
 export default function RoundsList() {

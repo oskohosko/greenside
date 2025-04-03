@@ -6,12 +6,9 @@ import ScoreTable from "../components/analysis/ScoreTable"
 
 export default function AnalysisPage() {
 
-  const { selectedRound, isScoreLoading, roundHoles, courseHoles } = useRoundStore()
+  const { roundHoles } = useRoundStore()
 
   const scores = roundHoles.map(hole => hole.score)
-
-  const frontNine = scores.slice(0, 9)
-  const backNine = scores.slice(9, 18)
 
   return (
     <div className="flex flex-col w-full h-full">

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react'
-import { haversineDistance, calculateBearing, calculateDelta } from "../../../utils/geometry"
+import { haversineDistance, calculateBearing, calculateDelta } from "../../../utils/utils"
 import { useRoundStore } from '../../../store/useRoundStore'
 
 
@@ -55,7 +55,7 @@ const initializeMapKit = (token) => {
   return initializationPromise
 }
 // This is our component
-export default function HoleMap({ hole }) {
+export default function HoleMap({ hole, interactive }) {
 
   const [isMapLoading, setIsMapLoading] = useState(true)
 
@@ -115,9 +115,9 @@ export default function HoleMap({ hole }) {
           showsZoomControl: false,
           showsMapTypeControl: false,
           showsScale: mapkit.FeatureVisibility.Hidden,
-          // Disabling these features for the list
-          isScrollEnabled: false,
-          isZoomEnabled: false
+          // Disabling these features for the list unless we flag as interactive
+          isScrollEnabled: interactive ? true : false,
+          isZoomEnabled: interactive ? true : false
           // mapType: mapkit.Map.MapTypes.Satellite
         })
         mapRef.current = map
@@ -174,9 +174,14 @@ export default function HoleMap({ hole }) {
     // What the annotation looks like
     var div = document.createElement("div")
     div.className = `
-    size-3 bg-blue-400 rounded-full border-2 border-blue-500 hover:bg-blue-500 cursor-pointer transition-all duration-300
-    relative
+    bg-blue-400 rounded-full border-2 border-blue-500 hover:bg-blue-500 cursor-pointer transition-all duration-300 relative
     `
+    // If map is interactive (larger) we want bigger annotations
+    if (interactive) {
+      div.classList.add("size-4")
+    } else {
+      div.classList.add("size-3")
+    }
 
     // Creating the tooltip
     var tooltip = document.createElement("div");
@@ -185,7 +190,7 @@ export default function HoleMap({ hole }) {
     absolute invisible transition-opacity duration-300 opacity-0
     `
     var shotDistDiv = document.createElement("div")
-    shotDistDiv.className = `text-xs font-medium`
+    shotDistDiv.className = `text-xs font-medium pointer-events-none`
     shotDistDiv.innerHTML = `${options.data.distanceToPin}m`
 
     tooltip.appendChild(shotDistDiv)
@@ -208,9 +213,11 @@ export default function HoleMap({ hole }) {
     // Seeing if we have at least 50% left to the hole
     const distRatio = distToPin / holeLength
 
+    let depth = interactive ? "20px" : "15px"
+
     // Top / bottom adjustments. Now just need to do left and right
-    tooltip.style.top = (distRatio < 0.5) ? "15px" : ""
-    tooltip.style.bottom = (distRatio > 0.5) ? "15px" : ""
+    tooltip.style.top = (distRatio < 0.5) ? depth : ""
+    tooltip.style.bottom = (distRatio > 0.5) ? depth : ""
     tooltip.style.transform = 'translateX(-50%)'
 
 

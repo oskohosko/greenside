@@ -173,12 +173,13 @@ export default function HoleMap({ hole, interactive, selectedShotIndex, setSelec
   }, [teeLat, teeLng, greenLat, greenLng, mapKitToken])
 
   useEffect(() => {
-    if (isMapLoading || !mapRef.current) return
+    if (isMapLoading || !mapRef.current) {
+      return
+    }
 
     const map = mapRef.current
     const holeShots = (shots.get(hole.num) || []).sort((a, b) => a.time - b.time)
 
-    // Clear existing annotations
     map.removeAnnotations(map.annotations)
 
     annotationRefs.current.clear()
@@ -187,16 +188,21 @@ export default function HoleMap({ hole, interactive, selectedShotIndex, setSelec
       const coordinate = new mapkit.Coordinate(shot.userLat, shot.userLong)
       const annotation = new mapkit.Annotation(
         coordinate,
-        annotationFactory,
-        { data: { shot, index }, calloutEnabled: false }
+        (coord, opts) => annotationFactory(coord, opts, selectedShotIndex),
+        {
+          data: { shot, index },
+          calloutEnabled: false
+        }
       )
       map.addAnnotation(annotation)
     })
-  }, [isMapLoading, shots])
+  }, [isMapLoading, shots, selectedShotIndex])
 
   useEffect(() => {
     annotationRefs.current.forEach(({ div, tooltip }, index) => {
-      if (!div || !tooltip) return
+      if (!div || !tooltip) {
+        return
+      }
 
       const isSelected = index === selectedShotIndex
 
@@ -212,12 +218,12 @@ export default function HoleMap({ hole, interactive, selectedShotIndex, setSelec
 
 
   // Factory function for annotations
-  var annotationFactory = function (coordinate, options) {
+  var annotationFactory = function (coordinate, options, selectedShotIndex) {
     // console.log(options.data)
     // What the annotation looks like
     var div = document.createElement("div")
     div.className = `
-    rounded-full border-2 cursor-pointer transition-all duration-300 relative pointer-events-none
+    rounded-full border-2 cursor-pointer transition-all duration-300 relative
     `
     // If map is interactive (larger) we want bigger annotations
     if (interactive) {
@@ -253,6 +259,21 @@ export default function HoleMap({ hole, interactive, selectedShotIndex, setSelec
     tooltip.style.top = (distRatio < 0.5) ? depth : ""
     tooltip.style.bottom = (distRatio > 0.5) ? depth : ""
     tooltip.style.transform = 'translateX(-50%)'
+
+    // Hover logic
+    div.addEventListener("mouseenter", () => {
+      tooltip.classList.remove("opacity-0", "invisible")
+      tooltip.classList.add("opacity-100", "visible")
+    })
+    div.addEventListener("mouseleave", () => {
+      // If this div is active, do nothing, otherwise, show the tooltip
+      if ((selectedShotIndex === options.data.index) && tooltip.classList.contains("opacity-100", "visible")) {
+        // Do nothing
+      } else {
+        tooltip.classList.remove("opacity-100", "visible")
+        tooltip.classList.add("opacity-0", "invisible")
+      }
+    })
 
     annotationRefs.current.set(options.data.index, { div, tooltip })
 

@@ -128,7 +128,7 @@ export default function RoundDetailPage() {
                   >
                     {i + 1}
                   </button>
-                  <div className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 bg-base-200 text-xs px-2 py-1 rounded-lg shadow-sm border border-base-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 duration-100 pointer-events-none`}>
+                  <div className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 bg-base-200 text-xs px-2 py-1 rounded-2xl shadow-sm border border-base-300 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10 duration-100 pointer-events-none`}>
                     Par {courseHoles[i].par} {holeDist ? `· ${holeDist}m` : ''}
                   </div>
                 </div>

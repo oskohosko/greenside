@@ -227,7 +227,7 @@ export default function HoleMap({ hole, interactive }) {
   // Waiting until the map has loaded before adding annotations as they are a bit finicky
   if (!isMapLoading) {
     // Going through each shot
-    shots.get(hole.num).forEach(function (shot) {
+    (shots.get(hole.num) || []).forEach(function (shot) {
       var coordinate = new mapkit.Coordinate(shot.userLat, shot.userLong)
       var annotation = new mapkit.Annotation(coordinate, annotationFactory, { data: shot })
       mapRef.current.addAnnotation(annotation)

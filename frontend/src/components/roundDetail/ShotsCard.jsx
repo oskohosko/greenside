@@ -3,45 +3,11 @@ import { useRoundStore } from "../../store/useRoundStore"
 import { ArrowRight, Flag, FlagTriangleRight } from "lucide-react"
 import { haversineDistance } from "../../utils/utils"
 
-export default function ShotsCard({ hole, par }) {
-
-  const { shots, getShotsForHole, isShotsLoading } = useRoundStore()
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const getShots = async () => {
-      setIsLoading(true)
-      try {
-        await getShotsForHole(hole)
-      } catch (error) {
-        console.error("Error getting shots:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    getShots()
-  }, [hole])
-
-  if (isLoading || isShotsLoading) {
-    return (
-      <div>
-        Loading...
-      </div>
-    )
-  }
-
-  // Ensuring loading has finished
-  let sortedShots = []
-  if (!isShotsLoading && !isLoading) {
-    shots.get(hole.holeNum).forEach((shot) => {
-      sortedShots.push(shot)
-    })
-    sortedShots.sort((a, b) => a.time - b.time)
-  }
+export default function ShotsCard({ hole, par, shots }) {
+  const sortedShots = [...shots].sort((a, b) => a.time - b.time)
 
   return (
-    <div className="card card-border rounded-2xl border-3 border-base-300 pt-1 px-2 pb-2 w-[400px] bg-base-100">
+    <div className="card card-border rounded-2xl border-3 border-base-300 bg-base-100 pt-1 px-2 pb-2 w-[350px] lg:w-[400px] transition-all duration-300">
       {sortedShots.map((shot, index) => {
         // Getting previous shot info
         const previousShot = sortedShots[index - 1]
@@ -95,7 +61,7 @@ export default function ShotsCard({ hole, par }) {
           }
         } else {
           // Pick up
-          if ((index + 1) < par) {
+          if ((index + 1) < par && (index + 1) !== hole.score) {
             flairs.push({ label: '📦 Packed it in', className: 'bg-[#D4BFA5] text-black'})
           }
           // Hole out / Big putt

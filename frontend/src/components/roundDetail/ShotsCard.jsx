@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react"
-import { useRoundStore } from "../../store/useRoundStore"
-import { ArrowRight, Flag, FlagTriangleRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { haversineDistance } from "../../utils/utils"
 
 export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSelectedShotIndex }) {
   const sortedShots = [...shots].sort((a, b) => a.time - b.time)
 
   return (
-    <div className="card card-border rounded-2xl border-3 border-base-300 bg-base-100 pt-1 px-2 pb-2 w-[350px] lg:w-[400px] transition-all duration-300">
+    <div className="card rounded-2xl bg-base-100 pt-1 px-3 pb-2 w-[350px] lg:w-[400px] transition-all duration-300 overflow-y-auto max-h-[700px]">
       {sortedShots.map((shot, index) => {
         // Getting previous shot info
         const previousShot = sortedShots[index - 1]
@@ -34,7 +32,7 @@ export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSele
         const isTeeShot = index === 0
         const shotType = isTeeShot
           ? '🏌️ Tee Shot'
-          : shot.distanceToPin > 120
+          : shot.distanceToPin > 100
             ? '🎯 Approach'
             : shot.distanceToPin > 30
               ? '🪁 Pitch'
@@ -56,7 +54,7 @@ export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSele
             flairs.push({ label: '🪶 Touch shot', className: 'bg-blue-200 text-black' })
           }
           // Bad shot
-          if ((distanceToNext < nextShot?.distanceToPin) && !isTeeShot) {
+          if (((distanceToNext < nextShot?.distanceToPin) || (nextShot?.distanceToPin > shot.distanceToPin / 2)) && !isTeeShot) {
             flairs.push({ label: '💥 Mishit', className: 'bg-red-200 text-black' })
           }
         } else {
@@ -75,11 +73,10 @@ export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSele
             key={index}
             className="mb-2"
           >
-            <h1 className="text-xl font-bold">Shot {index + 1}</h1>
+            <h1 className="text-xl font-bold ml-1">Shot {index + 1}</h1>
             <div
-              className={`card card-border border-3 bg-base-200 mb-2 p-2 rounded-xl
-              ${index === selectedShotIndex ? "border-base-content" : "border-base-400"}
-              transition-all duration-200 cursor-pointer
+              className={`card bg-base-200 mb-2 p-2 rounded-xl
+              ${index === selectedShotIndex ? "border-base-content" : "border-base-400"}  cursor-pointer hover:shadow-lg
               `}
               onClick={() => setSelectedShotIndex(
                 index === selectedShotIndex ? null : index
@@ -100,18 +97,15 @@ export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSele
                 </div>
                 <div className="text-lg font-bold">{shot.distanceToPin}m to pin</div>
                 <div className="text-sm text-gray-600">
-                  <span className="font-semibold">Time: </span>
-                  {new Date(shot.time * 1000).toLocaleString()}
-                </div>
-                <div className="text-sm text-gray-600">
                   <span className="font-semibold">Location: </span>
                   {shot.userLat.toFixed(4)}°, {shot.userLong.toFixed(4)}°
                 </div>
                 {distanceFromPrevious !== null && (
-                  <div className="text-sm text-gray-600">
-                    <ArrowRight className="text-secondary mr-1 inline" />
-                    <span className="font-semibold">Distance from last:</span>{' '}
-                    <span className="font-bold">{distanceFromPrevious}m</span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center px-2 py-1 rounded-full bg-base-300 text-sm font-semibold text-base-content">
+                      <ArrowRight strokeWidth={3} className="w-4 h-4 mr-1 text-secondary" />
+                      Last shot: {distanceFromPrevious}m
+                    </div>
                   </div>
                 )}
               </div>

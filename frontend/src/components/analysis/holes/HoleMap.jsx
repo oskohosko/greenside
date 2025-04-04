@@ -68,7 +68,7 @@ export default function HoleMap({ hole, interactive, selectedShotIndex, setSelec
 
   const mapKitToken = import.meta.env.VITE_MAPKIT_TOKEN
 
-  const { selectedRound, roundHoles, shots, getShotsForHole } = useRoundStore()
+  const { roundHoles, shots, getShotsForHole } = useRoundStore()
 
   // Extracting relevant info from the hole
   const teeLat = hole.tee_lat

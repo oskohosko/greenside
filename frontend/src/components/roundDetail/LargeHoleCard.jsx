@@ -10,7 +10,7 @@ export default function LargeHoleCard({ hole, selectedShotIndex, setSelectedShot
   const playedHole = roundHoles[hole.num - 1]
 
   return (
-    <div className="card card-border rounded-2xl border-3 border-base-300 pt-1 px-2 pb-2 w-[300px] bg-base-100" >
+    <div className="card rounded-2xl pt-1 px-2 pb-2 w-[300px] bg-base-100" >
       <div className="flex items-center justify-between">
         <div>
           <p className="font-semibold text-2xl px-1">Par {hole.par}</p>

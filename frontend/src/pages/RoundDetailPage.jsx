@@ -84,11 +84,11 @@ export default function RoundDetailPage() {
       {/* Card displaying round info */}
       <div className="flex flex-col sm:flex-row justify-between gap-3 px-2 mt-2">
         <div
-          className="card card-border border-3 rounded-xl w-full sm:w-[300px] lg:w-[400px] h-[110px] bg-base-100 border-base-300 transition-all duration-300">
+          className="card rounded-xl w-full sm:w-[300px] lg:w-[400px] h-[110px] bg-base-100 transition-all duration-300">
 
           <div className="flex flex-row h-full">
             {/* Title */}
-            <div className="h-full w-5/7 pb-2">
+            <div className="h-full w-5/7 pb-2 pt-2">
               <div className="flex flex-col justify-between border-r-2 border-base-400 border-dashed h-full pl-2">
                 <div className="flex flex-row items-center gap-1 h-full pr-2">
                   <MapPin className="size-11 text-primary" />

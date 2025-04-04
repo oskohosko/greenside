@@ -37,7 +37,9 @@ export default function RoundsList() {
       <div
         className="flex overflow-x-auto space-x-2 pb-4"
       >
-        {rounds.map((round, index) => (
+        {/* Mapping every round to their respective map including their shots */}
+        {/* Sorting rounds by date */}
+        {rounds.sort((a, b) => b.createdAt - a.createdAt).map((round, index) => (
           <button
             key={index}
             onClick={() => toggleSelectedRound(round)}

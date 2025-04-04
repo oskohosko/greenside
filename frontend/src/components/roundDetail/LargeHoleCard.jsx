@@ -2,10 +2,13 @@ import { useRoundStore } from "../../store/useRoundStore"
 import { haversineDistance, getBorderStyle } from "../../utils/utils"
 import { Flag } from "lucide-react"
 import HoleMap from "../analysis/holes/HoleMap"
+import { useState } from "react"
 
 export default function LargeHoleCard({ hole, selectedShotIndex, setSelectedShotIndex }) {
 
   const { roundHoles } = useRoundStore()
+
+  const [isSatellite, setIsSatellite] = useState(false)
 
   const playedHole = roundHoles[hole.num - 1]
 
@@ -40,8 +43,26 @@ export default function LargeHoleCard({ hole, selectedShotIndex, setSelectedShot
           hole={hole}
           interactive={true}
           selectedShotIndex={selectedShotIndex}
-          setSelectedShotIndex={setSelectedShotIndex} />
+          setSelectedShotIndex={setSelectedShotIndex}
+          isSatellite={isSatellite}
+          setIsSatellite={setIsSatellite}
+          />
       </div>
-    </div >
+      <div className="flex flex-col gap-2 mt-2 pl-1">
+        <label className="flex cursor-pointer items-center gap-2">
+          <input
+            type="checkbox"
+            className={`toggle toggle-sm text-base-300 ${isSatellite ? 'text-primary' : ''} transition-all duration-300`}
+            checked={isSatellite}
+            onChange={() => {
+              setIsSatellite(!isSatellite)
+            }}>
+          </input>
+          <span className="text-sm font-semibold">
+            Satellite
+          </span>
+        </label>
+      </div>
+    </div>
   )
 }

@@ -55,7 +55,7 @@ const initializeMapKit = (token) => {
   return initializationPromise
 }
 // This is our component
-export default function HoleMap({ hole, interactive, selectedShotIndex, setSelectedShotIndex }) {
+export default function HoleMap({ hole, interactive, selectedShotIndex, isSatellite, setIsSatellite }) {
 
   const [isMapLoading, setIsMapLoading] = useState(true)
 
@@ -126,6 +126,9 @@ export default function HoleMap({ hole, interactive, selectedShotIndex, setSelec
           // mapType: mapkit.Map.MapTypes.Satellite
         })
         mapRef.current = map
+
+        // Setting the map type based on the isSatellite state
+        map.mapType = isSatellite ? window.mapkit.Map.MapTypes.Satellite : window.mapkit.Map.MapTypes.Standard
 
         // Creating a region that fits both tee and green
         const midLat = (teeLat + greenLat) / 2
@@ -215,6 +218,13 @@ export default function HoleMap({ hole, interactive, selectedShotIndex, setSelec
       tooltip.classList.toggle("invisible", !isSelected)
     })
   }, [selectedShotIndex])
+
+  // Use effect to handle map type toggle
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.mapType = isSatellite ? window.mapkit.Map.MapTypes.Satellite : window.mapkit.Map.MapTypes.Standard
+    }
+  }, [isSatellite])
 
 
   // Factory function for annotations

@@ -5,7 +5,7 @@ export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSele
   const sortedShots = [...shots].sort((a, b) => a.time - b.time)
 
   return (
-    <div className="card rounded-2xl bg-base-100 pt-1 px-3 pb-2 w-[350px] lg:w-[400px] transition-all duration-300 overflow-y-auto max-h-[700px]">
+    <div className="card rounded-2xl bg-base-100 pt-1 px-3 pb-2 w-[350px] lg:w-[400px] transition-all duration-300 overflow-y-auto max-h-[750px]">
       {sortedShots.map((shot, index) => {
         // Getting previous shot info
         const previousShot = sortedShots[index - 1]
@@ -54,7 +54,7 @@ export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSele
             flairs.push({ label: '🪶 Touch shot', className: 'bg-blue-200 text-black' })
           }
           // Bad shot
-          if (((distanceToNext < nextShot?.distanceToPin) || (nextShot?.distanceToPin > shot.distanceToPin / 2)) && !isTeeShot) {
+          if (((distanceToNext < nextShot?.distanceToPin) || (nextShot?.distanceToPin > shot.distanceToPin / 2)) && !(par === 5)) {
             flairs.push({ label: '💥 Mishit', className: 'bg-red-200 text-black' })
           }
         } else {

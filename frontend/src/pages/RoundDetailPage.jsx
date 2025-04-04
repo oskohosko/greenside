@@ -57,7 +57,21 @@ export default function RoundDetailPage() {
     }
   }
 
+  // Allowing arrow key interactions
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight") {
+        goToHole(holeIndex + 1)
+      } else if (e.key === "ArrowLeft") {
+        goToHole(holeIndex - 1)
+      }
+    }
 
+    window.addEventListener("keydown", handleKeyDown)
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [holeIndex, totalHoles, roundId])
 
   // Update this to be a skeleton
   if (isLoading || isRoundsLoading) {

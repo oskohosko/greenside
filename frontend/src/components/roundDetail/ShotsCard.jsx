@@ -69,10 +69,7 @@ export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSele
         }
 
         return (
-          <div
-            key={index}
-            className="mb-2"
-          >
+          <div key={index} className="mb-2">
             <h1 className="text-xl font-bold ml-1">Shot {index + 1}</h1>
             <div
               className={`card bg-base-200 mb-2 p-2 rounded-xl
@@ -80,9 +77,7 @@ export default function ShotsCard({ hole, par, shots, selectedShotIndex, setSele
               `}
               onClick={() => setSelectedShotIndex(
                 index === selectedShotIndex ? null : index
-              )
-              }
-            >
+              )}>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-wrap gap-2">
                   <span className="text-sm px-2 py-1 rounded-full bg-accent">{shotType}</span>

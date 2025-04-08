@@ -6,6 +6,7 @@ import { haversineDistance, timeConverter } from "../utils/utils"
 import LargeHoleCard from "../components/roundDetail/LargeHoleCard"
 import ShotsCard from "../components/roundDetail/ShotsCard"
 import { useNavigate } from "react-router-dom"
+import Insights from "../components/roundDetail/Insights"
 
 export default function RoundDetailPage() {
 
@@ -172,7 +173,7 @@ export default function RoundDetailPage() {
 
         {/* Hole section */}
         <div className="flex flex-col">
-          <h1 className="text-3xl font-bold mt-2 px-1">Hole {holeNum}</h1>
+          <h1 className="text-3xl font-bold mt-2 px-1 mb-1">Hole {holeNum}</h1>
           {/* The hole card */}
           <LargeHoleCard
             hole={selectedHole}
@@ -181,7 +182,7 @@ export default function RoundDetailPage() {
         </div>
         {/* Score section */}
         <div className="flex flex-col">
-          <h1 className="text-3xl font-bold mt-2 px-1">Shots</h1>
+          <h1 className="text-3xl font-bold mt-2 px-1 mb-1">Shots</h1>
           {/* Sending the user's shots */}
           <ShotsCard
             hole={roundHoles[holeNum - 1]}
@@ -190,6 +191,11 @@ export default function RoundDetailPage() {
             selectedShotIndex={selectedShotIndex}
             setSelectedShotIndex={setSelectedShotIndex}
           />
+        </div>
+        {/* Insights section */}
+        <div className="flex flex-col">
+          <h1 className="text-3xl font-bold mt-2 px-1 mb-1">Insights</h1>
+          <Insights />
         </div>
       </div>
     </div>
